@@ -1305,3 +1305,90 @@ export const checkGoogleMeetConfig = async (req, res) => {
     });
   }
 };
+
+/**
+ * Controller to generate event posters using AI
+ * 
+ * Expected Request Body:
+ * {
+ *   eventName: string (required) - Name of the event
+ *   dateTime: string (required) - Event date and time
+ *   location: string (required) - Event location
+ *   eventType: string (required) - Type of event
+ *   description?: string (optional) - Event description
+ *   posterStyle?: string (optional) - Style preference for poster
+ * }
+ * 
+ * Returns:
+ * {
+ *   success: boolean,
+ *   posters: Array<{url: string, style: string}>
+ * }
+ */
+export const generateEventPosters = async (req, res) => {
+  try {
+    console.log('=== GENERATE EVENT POSTERS CONTROLLER CALLED ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+
+    const {
+      eventName,
+      dateTime,
+      location,
+      eventType,
+      description,
+      posterStyle
+    } = req.body;
+
+    // Validate required fields
+    if (!eventName || !dateTime || !location || !eventType) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields: eventName, dateTime, location, and eventType are required"
+      });
+    }
+
+    // Use SmythOS agent for poster generation
+    const smythosUrl = "https://cmfw5qbmfxvnkjxgtpjoabofw.agent.a.smyth.ai";
+    
+    console.log("SmythOS URL:", smythosUrl);
+    console.log("Full endpoint:", `${smythosUrl}/api/generate_event_posters`);
+    
+    // Prepare payload for SmythOS agent
+    const payload = {
+      eventName,
+      dateTime,
+      location,
+      eventType,
+      description: description || '',
+      posterStyle: posterStyle || 'modern'
+    };
+
+    console.log("Sending poster generation payload:", JSON.stringify(payload, null, 2));
+
+    const result = await axios.post(`${smythosUrl}/api/generate_event_posters`, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 60000 // 60 seconds timeout for image generation
+    });
+
+    console.log("SmythOS Poster Response:", JSON.stringify(result.data, null, 2));
+    
+    // Return the response from SmythOS
+    return res.status(200).json({
+      success: true,
+      ...result.data
+    });
+
+  } catch (error) {
+    console.error("Event poster generation error:", error.message);
+    console.error("Error details:", error.response?.data || error);
+    
+    return res.status(500).json({
+      success: false,
+      error: "Failed to generate event posters. Please try again.",
+      details: error.message,
+      smythosResponse: error.response?.data
+    });
+  }
+};

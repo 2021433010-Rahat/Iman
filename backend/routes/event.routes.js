@@ -7,6 +7,7 @@ import {
     deleteEvent,
     fetchEventParticipants,
     generateEventAnnouncement,
+    generateEventPosters,
     generateEventRegistrationForm,
     generateGoogleForm,
     getEventGoogleMeets,
@@ -71,5 +72,8 @@ eventRouter.post("/create-google-meet", isAuth, createGoogleMeet)
 
 // AI-powered announcement generation route (NO authentication required)
 eventRouter.post("/generate-announcement", generateEventAnnouncement)
+
+// AI-powered poster generation route (NO authentication required)
+eventRouter.post("/generate_event_posters", generateEventPosters)
 
 export default eventRouter
