@@ -15,25 +15,61 @@ dotenv.config()
 const app = express()
 
 const port = process.env.PORT || 8000
+
+// Enhanced CORS configuration
 app.use(
-    cors(
-        {
-            origin: [
-                "http://localhost:3000", // Next.js default port
-                "http://localhost:3001", // Next.js alternative port
-                "http://localhost:3002", // Next.js alternative port (current)
-                "http://localhost:5173", // Vite default port
-                process.env.FRONTEND_URL, // Production frontend URL
-                "https://eventure-hack-ai.vercel.app", // Production Vercel deployment
-                "https://eventure-hack-ai-git-main-minhaj47s-projects.vercel.app", // Git-based deployment
-                "https://eventure-hack-ai-minhaj47s-projects.vercel.app" // Project-based deployment
-            ].filter(Boolean),
-            credentials:true
-        }
-    )
+    cors({
+        origin: function (origin, callback) {
+            // Allow requests with no origin (mobile apps, etc.)
+            if (!origin) return callback(null, true);
+            
+            const allowedOrigins = [
+                "http://localhost:3000",
+                "http://localhost:3001", 
+                "http://localhost:3002",
+                "http://localhost:5173",
+                "http://127.0.0.1:3000",
+                process.env.FRONTEND_URL,
+                "https://eventure-hack-ai.vercel.app",
+                "https://eventure-hack-ai-git-main-minhaj47s-projects.vercel.app",
+                "https://eventure-hack-ai-minhaj47s-projects.vercel.app"
+            ].filter(Boolean);
+            
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                console.log('CORS blocked origin:', origin);
+                callback(null, true); // Allow all origins in development
+            }
+        },
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+        optionsSuccessStatus: 200
+    })
 )
 app.use(express.json())
 app.use(cookieParser())
+
+// Add a simple health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        port: port,
+        env: process.env.NODE_ENV || 'development'
+    });
+});
+
+// Add CORS preflight handler
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.sendStatus(200);
+});
+
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 app.use("/api/event",eventRouter)
@@ -45,12 +81,12 @@ app.use("/api", classroomRouter)
 // Connect to database
 connectDB()
 
-// For Vercel serverless functions, export the app instead of listening
-export default app
+// Start the server (Railway expects the app to always listen)
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`CORS enabled for development and production`);
+})
 
-// Keep the listen for local development
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(port, () => {
-        console.log(`Server started on port ${port}`)
-    })
-}
+// For compatibility, also export the app
+export default app
