@@ -1,0 +1,646 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Event Management Assistant",
+    "description": "An intelligent assistant that creates social media posts and poster designs for events",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://cmfw5qbmfxvnkjxgtpjoabofw.agent.a.smyth.ai"
+    }
+  ],
+  "paths": {
+    "/api/generate_event_posts": {
+      "post": {
+        "summary": "Generate 3 different social media posts (Facebook, WhatsApp, Twitter) for an event",
+        "operationId": "generate_event_posts",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventName": {
+                    "type": "string"
+                  },
+                  "dateTime": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "googleFormLink": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventName",
+                  "dateTime",
+                  "location",
+                  "eventType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate_event_posters": {
+      "post": {
+        "summary": "Generate 5 different poster designs for an event",
+        "operationId": "generate_event_posters",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventName": {
+                    "type": "string"
+                  },
+                  "dateTime": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "googleFormLink": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventName",
+                  "dateTime",
+                  "location",
+                  "eventType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate_email_body": {
+      "post": {
+        "summary": "Generate an email body based on provided data and context. Specify the purpose, recipient details, and key information to include",
+        "operationId": "generate_email_body",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "recipientName": {
+                    "type": "string"
+                  },
+                  "senderName": {
+                    "type": "string"
+                  },
+                  "keyData": {
+                    "type": "string"
+                  },
+                  "tone": {
+                    "type": "string"
+                  },
+                  "callToAction": {
+                    "type": "string"
+                  },
+                  "suggestions": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "purpose",
+                  "keyData"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/send_event_update": {
+      "post": {
+        "summary": "Read contacts from Google Sheet (emails, WhatsApp, Telegram) and send event update notifications",
+        "operationId": "send_event_update",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sheetLink": {
+                    "type": "string"
+                  },
+                  "emailSubject": {
+                    "type": "string"
+                  },
+                  "emailBody": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sheetLink",
+                  "emailSubject",
+                  "emailBody"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/read_form_responses": {
+      "post": {
+        "summary": "Read all responses from a Google Form using the response sheet ID",
+        "operationId": "read_form_responses",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "responseSheetId": {
+                    "type": "string"
+                  },
+                  "sheetName": {
+                    "type": "string"
+                  },
+                  "range": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "responseSheetId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/extract_all_contacts": {
+      "post": {
+        "summary": "Extract all contact information including names, emails, WhatsApp numbers, and Telegram usernames from a Google Sheet",
+        "operationId": "extract_all_contacts",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sheetLink": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sheetLink"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create_classroom": {
+      "post": {
+        "summary": "Create a new Google Classroom class with authentication. Provide class name, section (optional), and description (optional)",
+        "operationId": "create_classroom",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "className": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "className"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/send_single_email": {
+      "post": {
+        "summary": "Send an email to a specific recipient with custom subject and body",
+        "operationId": "send_single_email",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recipientEmail": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipientEmail",
+                  "subject",
+                  "body"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/add_classroom_announcement": {
+      "post": {
+        "summary": "Add an announcement to a Google Classroom. Provide the courseid  and announcement text",
+        "operationId": "add_classroom_announcement",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseName": {
+                    "type": "string"
+                  },
+                  "announcementText": {
+                    "type": "string"
+                  },
+                  "materials": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "courseName",
+                  "announcementText"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create_event_announcement": {
+      "post": {
+        "summary": "Create a professional event announcement for Google Classroom. Provide event data and it will format and post to the specified classroom.",
+        "operationId": "create_event_announcement",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseName": {
+                    "type": "string"
+                  },
+                  "eventName": {
+                    "type": "string"
+                  },
+                  "eventDate": {
+                    "type": "string"
+                  },
+                  "eventTime": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "registrationLink": {
+                    "type": "string"
+                  },
+                  "deadline": {
+                    "type": "string"
+                  },
+                  "additionalInfo": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "courseName",
+                  "eventName",
+                  "eventDate",
+                  "eventTime",
+                  "location"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate_event_announcement": {
+      "post": {
+        "summary": "Generate a professional event announcement message. Provide event data and get a formatted announcement text.",
+        "operationId": "generate_event_announcement",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "announcementMessage": {
+                    "type": "string"
+                  },
+                  "eventName": {
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "type": "string"
+                  },
+                  "suggestions": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "announcementMessage",
+                  "eventName",
+                  "eventType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate_google_form": {
+      "post": {
+        "summary": "Generate a Google Form for event registration with fields for name, WhatsApp number, Telegram number, and email",
+        "operationId": "generate_google_form",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "formTitle": {
+                    "type": "string"
+                  },
+                  "formDescription": {
+                    "type": "string"
+                  },
+                  "editorEmail": {
+                    "type": "string"
+                  },
+                  "customFields": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "formTitle"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create_google_meet": {
+      "post": {
+        "summary": "Create a Google Meet meeting with admin permissions. Provide meeting title, start/end times, and editor email for admin access",
+        "operationId": "create_google_meet",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "meetingTitle": {
+                    "type": "string"
+                  },
+                  "startDateTime": {
+                    "type": "string"
+                  },
+                  "endDateTime": {
+                    "type": "string"
+                  },
+                  "editorEmail": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "meetingTitle",
+                  "startDateTime",
+                  "endDateTime"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
