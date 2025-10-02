@@ -1,5 +1,10 @@
 nohup: ignoring input
-[dotenv@17.2.0] injecting env (14) from .env (tip: ⚙️  write to custom object with { processEnv: myObject })
-[dotenv@17.2.0] injecting env (0) from .env (tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] })
-server started
+=== REGISTERING EVENT ROUTES ===
+updateEventClassroom function: function
+Registered update-classroom route
+[dotenv@17.2.0] injecting env (15) from .env (tip: ⚙️  write to custom object with { processEnv: myObject })
+[dotenv@17.2.0] injecting env (0) from .env (tip: ⚙️  write to custom object with { processEnv: myObject })
+Server started on port 8000
+Environment: production
+CORS enabled for development and production
 DB connected

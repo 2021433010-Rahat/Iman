@@ -621,6 +621,8 @@ export const generateEventRegistrationForm = async (req, res) => {
 
     console.log('=== EVENT REGISTRATION FORM REQUEST ===');
     console.log('Event ID:', eventId);
+    console.log('User ID from auth:', req.userId);
+    console.log('User object from auth:', req.user ? { id: req.user._id, email: req.user.email } : 'Not available');
     console.log('Editor Email:', editorEmail || 'Not provided (will use default)');
     console.log('Force Regenerate:', forceRegenerate || false);
     console.log('Custom Fields:', customFields ? `Array with ${customFields.length} fields` : 'None');
@@ -743,7 +745,12 @@ export const generateEventRegistrationForm = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Event registration form generation error:', error);
+    console.error('=== EVENT REGISTRATION FORM GENERATION ERROR ===');
+    console.error('Error type:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Error code:', error.code);
+    console.error('Full error object:', JSON.stringify(error, null, 2));
     
     // Provide specific error messages for different error types
     let errorMessage = 'Failed to generate event registration form';
@@ -758,11 +765,15 @@ export const generateEventRegistrationForm = async (req, res) => {
     } else if (error.isRetryableError && error.retryCount >= 3) {
       errorMessage = 'Form generation failed after multiple attempts. The service may be temporarily unavailable. Please try again in a few minutes.';
       errorCode = 503; // Service Unavailable
+    } else if (error.message) {
+      // Include the actual error message for debugging
+      errorMessage = `Failed to generate event registration form: ${error.message}`;
     }
     
     res.status(errorCode).json({
       success: false,
       message: errorMessage,
+      error: error.message,
       code: error.code,
       retryCount: error.retryCount,
       canRetry: error.isRetryableError && error.retryCount < 3

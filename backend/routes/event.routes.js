@@ -64,6 +64,17 @@ eventRouter.put("/update-classroom-test/:eventId", (req, res) => {
 
 // Google Form generation routes (authentication required for user email)
 eventRouter.post("/generate-google-form", isAuth, generateGoogleForm)
+// Add a debug route to test auth before the main endpoint
+eventRouter.get("/:eventId/check-auth", isAuth, (req, res) => {
+  res.json({ 
+    success: true, 
+    message: "Authentication successful",
+    user: {
+      id: req.userId,
+      email: req.user?.email
+    }
+  });
+});
 eventRouter.post("/:eventId/generate-registration-form", isAuth, generateEventRegistrationForm)
 eventRouter.get("/test-form-creation", testFormCreation)
 
