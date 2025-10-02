@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "echo 'Build completed successfully'",
-    "start": "node index.js",
     "dev": "nodemon index.js",
+    "start": "node index.js",
     "dev-fallback": "node --watch index.js"
   },
   "author": "Mahfuj",

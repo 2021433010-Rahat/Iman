@@ -24,8 +24,9 @@ app.use(
                 "http://localhost:3002", // Next.js alternative port (current)
                 "http://localhost:5173", // Vite default port
                 process.env.FRONTEND_URL, // Production frontend URL
-                process.env.RAILWAY_STATIC_URL, // Railway generated domain
-                "https://your-frontend-domain.vercel.app" // Add your actual frontend domain
+                "https://eventure-hack-ai.vercel.app", // Production Vercel deployment
+                "https://eventure-hack-ai-git-main-minhaj47s-projects.vercel.app", // Git-based deployment
+                "https://eventure-hack-ai-minhaj47s-projects.vercel.app" // Project-based deployment
             ].filter(Boolean),
             credentials:true
         }
@@ -44,10 +45,12 @@ app.use("/api", classroomRouter)
 // Connect to database
 connectDB()
 
-// Start the server (Railway expects the app to always listen)
-app.listen(port, () => {
-    console.log(`Server started on port ${port}`)
-})
-
-// For compatibility, also export the app
+// For Vercel serverless functions, export the app instead of listening
 export default app
+
+// Keep the listen for local development
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server started on port ${port}`)
+    })
+}
