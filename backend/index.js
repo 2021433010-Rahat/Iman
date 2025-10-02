@@ -44,7 +44,7 @@ app.use(
                 callback(null, true);
             } else {
                 console.log('CORS blocked origin:', origin);
-                callback(null, true); // Allow all origins in development
+                callback(new Error("Not allowed by CORS"));
             }
         },
         credentials: true,
