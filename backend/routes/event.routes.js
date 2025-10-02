@@ -21,55 +21,46 @@ import {
 } from "../controllers/event.controller.js"
 import isAuth from "../middlewares/isAuth.js"
 
-
 const eventRouter = express.Router()
 
-// Debug: Log that routes are being registered
 console.log('=== REGISTERING EVENT ROUTES ===');
-console.log('updateEventClassroom function:', typeof updateEventClassroom);
 
-// Existing routes
-eventRouter.get("/all",isAuth,getUserEvents)
+// Test route first to ensure basic routing works
+eventRouter.get("/test", (req, res) => {
+    res.json({ message: "Event routes working", timestamp: new Date().toISOString() });
+});
 
-// Configuration routes (must be before parameterized routes)
+// Configuration routes (static routes first)
 eventRouter.get("/google-meet-config", checkGoogleMeetConfig)
-eventRouter.get("/google-form-config", checkGoogleFormConfig)
+eventRouter.get("/google-form-config", checkGoogleFormConfig) 
+eventRouter.get("/test-form-creation", testFormCreation)
 
-// Google Meet specific routes (must be before generic /:eventId route)
-eventRouter.get("/:eventId/google-meets", isAuth, getEventGoogleMeets)
-
-eventRouter.get("/:eventId",isAuth,getEventById) // Get single event by ID
-eventRouter.put("/update/:eventId",isAuth,updateEvent) // Restore auth
-eventRouter.put("/update-classroom/:eventId",updateEventClassroom) // New classroom update route (temp no auth)
-console.log('Registered update-classroom route');
-eventRouter.post("/add",isAuth,addEvent)
-eventRouter.delete("/delete/:eventId",isAuth,deleteEvent) // Delete event route
-eventRouter.get("/participants/:eventId",isAuth,fetchEventParticipants)
-
-// Event update routes (no authentication required)
+// Non-parameterized routes
+eventRouter.get("/all", isAuth, getUserEvents)
+eventRouter.post("/add", isAuth, addEvent)
 eventRouter.post("/send-update", sendEventUpdate)
 eventRouter.post("/bulk-notification", sendBulkEventNotification)
 eventRouter.post("/send-reminder", sendEventReminder)
-
-// Test route (NO authentication required)
-eventRouter.get("/test", (req, res) => {
-  res.json({ message: "Test route working without auth" });
-});
-
-// Debug route for classroom update (NO auth for testing)
-eventRouter.put("/update-classroom-test/:eventId", (req, res) => {
-  res.json({ message: "Classroom update route accessible", eventId: req.params.eventId, body: req.body });
-});
-
-// Google Form generation routes (authentication required for user email)
 eventRouter.post("/generate-google-form", isAuth, generateGoogleForm)
-eventRouter.post("/:eventId/generate-registration-form", isAuth, generateEventRegistrationForm)
-eventRouter.get("/test-form-creation", testFormCreation)
-
-// Google Meet creation routes (authentication required for user email)
 eventRouter.post("/create-google-meet", isAuth, createGoogleMeet)
-
-// AI-powered announcement generation route (NO authentication required)
 eventRouter.post("/generate-announcement", generateEventAnnouncement)
+
+// Parameterized routes (put these after static routes)
+eventRouter.get("/:eventId", isAuth, getEventById)
+eventRouter.put("/update/:eventId", isAuth, updateEvent)
+eventRouter.put("/update-classroom/:eventId", updateEventClassroom)
+eventRouter.delete("/delete/:eventId", isAuth, deleteEvent)
+eventRouter.get("/participants/:eventId", isAuth, fetchEventParticipants)
+eventRouter.get("/:eventId/google-meets", isAuth, getEventGoogleMeets)
+eventRouter.post("/:eventId/generate-registration-form", isAuth, generateEventRegistrationForm)
+
+// Debug route
+eventRouter.put("/update-classroom-test/:eventId", (req, res) => {
+    res.json({ 
+        message: "Classroom update route accessible", 
+        eventId: req.params.eventId, 
+        body: req.body 
+    });
+});
 
 export default eventRouter
