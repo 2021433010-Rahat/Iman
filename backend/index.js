@@ -30,10 +30,14 @@ app.use(
                 "http://localhost:5173",
                 "http://127.0.0.1:3000",
                 "https://eventure-hack-ai-4958.vercel.app",
-                process.env.FRONTEND_URL,
+                "https://frontend-dusky-nine-35.vercel.app",
+                "https://frontend-p4uxkjbhu-abdullahs-projects-f95acc40.vercel.app",
+                 process.env.FRONTEND_URL,
+
                 "https://eventure-hack-ai.vercel.app",
                 "https://eventure-hack-ai-git-main-minhaj47s-projects.vercel.app",
                 "https://eventure-hack-ai-minhaj47s-projects.vercel.app"
+
             ].filter(Boolean);
             
             if (allowedOrigins.indexOf(origin) !== -1) {
