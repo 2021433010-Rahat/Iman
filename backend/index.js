@@ -29,6 +29,7 @@ app.use(
                 "http://localhost:3002",
                 "http://localhost:5173",
                 "http://127.0.0.1:3000",
+                "https://eventure-hack-ai-4958.vercel.app",
                 process.env.FRONTEND_URL,
                 "https://eventure-hack-ai.vercel.app",
                 "https://eventure-hack-ai-git-main-minhaj47s-projects.vercel.app",
