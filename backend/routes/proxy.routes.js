@@ -3,7 +3,7 @@ import { proxyImage } from '../controllers/proxy.controller.js';
 
 const router = express.Router();
 
-router.get('/image', proxyImage);
+router.get('/', proxyImage);
 
 export default router;
 

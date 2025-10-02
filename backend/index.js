@@ -70,61 +70,22 @@ app.options('*', (req, res) => {
     res.sendStatus(200);
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.json({ 
-        message: 'Iman Backend API is running!',
-        version: '1.0.0',
-        timestamp: new Date().toISOString(),
-        endpoints: {
-            health: '/health',
-            auth: '/api/auth',
-            events: '/api/event'
-        }
-    });
-});
+app.use("/api/auth",authRouter)
+app.use("/api/user",userRouter)
+app.use("/api/event",eventRouter)
+app.use("/api",emailRouter)
+app.use("/api",contactRouter)
+app.use("/api/proxy", proxyRouter)
+app.use("/api", classroomRouter)
 
-// Basic routes only to test startup
-app.use("/api/auth", authRouter)
-app.use("/api/event", eventRouter)
+// Connect to database
+connectDB()
 
-// Temporarily comment out potentially problematic routes
-// app.use("/api/user", userRouter)
-// app.use("/api", emailRouter)
-// app.use("/api", contactRouter)
-// app.use("/api/proxy", proxyRouter)
-// app.use("/api", classroomRouter)
-
-// Catch-all error handler
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({ 
-        error: 'Internal Server Error',
-        message: err.message,
-        timestamp: new Date().toISOString()
-    });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-    res.status(404).json({ 
-        error: 'Not Found',
-        path: req.originalUrl,
-        message: 'The requested endpoint does not exist',
-        timestamp: new Date().toISOString()
-    });
-});
-
-// Start the server first (Railway expects the app to always listen)
+// Start the server (Railway expects the app to always listen)
 app.listen(port, () => {
-    console.log(`🚀 Server started on port ${port}`);
-    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔐 CORS enabled for development and production`);
-    
-    // Connect to database after server starts
-    connectDB().catch(err => {
-        console.log('Database connection failed, but server is running:', err.message);
-    });
+    console.log(`Server started on port ${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`CORS enabled for development and production`);
 })
 
 // For compatibility, also export the app
