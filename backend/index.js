@@ -73,10 +73,10 @@ app.options('*', (req, res) => {
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 app.use("/api/event",eventRouter)
-app.use("/api/email",emailRouter)
-app.use("/api/contact",contactRouter)
+app.use("/api",emailRouter)
+app.use("/api",contactRouter)
 app.use("/api/proxy", proxyRouter)
-app.use("/api/classroom", classroomRouter)
+app.use("/api", classroomRouter)
 
 // Connect to database
 connectDB()
