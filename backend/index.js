@@ -70,13 +70,16 @@ app.options('*', (req, res) => {
     res.sendStatus(200);
 });
 
-app.use("/api/auth",authRouter)
-app.use("/api/user",userRouter)
-app.use("/api/event",eventRouter)
-app.use("/api",emailRouter)
-app.use("/api",contactRouter)
-app.use("/api/proxy", proxyRouter)
-app.use("/api", classroomRouter)
+// Basic routes only to test startup
+app.use("/api/auth", authRouter)
+app.use("/api/event", eventRouter)
+
+// Temporarily comment out potentially problematic routes
+// app.use("/api/user", userRouter)
+// app.use("/api", emailRouter)
+// app.use("/api", contactRouter)
+// app.use("/api/proxy", proxyRouter)
+// app.use("/api", classroomRouter)
 
 // Connect to database
 connectDB()

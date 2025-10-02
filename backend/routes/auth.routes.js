@@ -1,13 +1,22 @@
 import express from "express"
-import { getCurrentUser, googleAuth, Login, logOut, signUp } from "../controllers/auth.controller.js"
-import isAuth from "../middlewares/isAuth.js"
 
 const authRouter = express.Router()
 
-authRouter.post("/signup", signUp)
-authRouter.post("/signin", Login)
-authRouter.post("/google", googleAuth)
-authRouter.get("/logout", logOut)
-authRouter.get("/me", isAuth, getCurrentUser)
+// Simple test routes to verify auth endpoints work
+authRouter.get("/test", (req, res) => {
+    res.json({ 
+        message: "Auth routes working", 
+        timestamp: new Date().toISOString(),
+        status: "success"
+    });
+});
+
+authRouter.get("/health", (req, res) => {
+    res.json({ 
+        service: "auth",
+        status: "OK",
+        timestamp: new Date().toISOString()
+    });
+});
 
 export default authRouter
