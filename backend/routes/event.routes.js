@@ -7,7 +7,6 @@ import {
     deleteEvent,
     fetchEventParticipants,
     generateEventAnnouncement,
-    generateEventPosters,
     generateEventRegistrationForm,
     generateGoogleForm,
     getEventGoogleMeets,
@@ -64,17 +63,6 @@ eventRouter.put("/update-classroom-test/:eventId", (req, res) => {
 
 // Google Form generation routes (authentication required for user email)
 eventRouter.post("/generate-google-form", isAuth, generateGoogleForm)
-// Add a debug route to test auth before the main endpoint
-eventRouter.get("/:eventId/check-auth", isAuth, (req, res) => {
-  res.json({ 
-    success: true, 
-    message: "Authentication successful",
-    user: {
-      id: req.userId,
-      email: req.user?.email
-    }
-  });
-});
 eventRouter.post("/:eventId/generate-registration-form", isAuth, generateEventRegistrationForm)
 eventRouter.get("/test-form-creation", testFormCreation)
 
@@ -83,8 +71,5 @@ eventRouter.post("/create-google-meet", isAuth, createGoogleMeet)
 
 // AI-powered announcement generation route (NO authentication required)
 eventRouter.post("/generate-announcement", generateEventAnnouncement)
-
-// AI-powered poster generation route (NO authentication required)
-eventRouter.post("/generate_event_posters", generateEventPosters)
 
 export default eventRouter

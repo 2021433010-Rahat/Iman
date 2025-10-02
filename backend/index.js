@@ -78,33 +78,6 @@ app.use("/api",contactRouter)
 app.use("/api/proxy", proxyRouter)
 app.use("/api", classroomRouter)
 
-// Global error handler (must be after all routes)
-app.use((err, req, res, next) => {
-    console.error('=== GLOBAL ERROR HANDLER ===');
-    console.error('Error:', err);
-    console.error('Stack:', err.stack);
-    console.error('URL:', req.url);
-    console.error('Method:', req.method);
-    console.error('Body:', req.body);
-    
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal Server Error',
-        error: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
-});
-
-// 404 handler
-app.use((req, res) => {
-    console.log('=== 404 NOT FOUND ===');
-    console.log('URL:', req.url);
-    console.log('Method:', req.method);
-    res.status(404).json({
-        success: false,
-        message: 'Route not found'
-    });
-});
-
 // Connect to database
 connectDB()
 

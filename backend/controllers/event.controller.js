@@ -621,8 +621,6 @@ export const generateEventRegistrationForm = async (req, res) => {
 
     console.log('=== EVENT REGISTRATION FORM REQUEST ===');
     console.log('Event ID:', eventId);
-    console.log('User ID from auth:', req.userId);
-    console.log('User object from auth:', req.user ? { id: req.user._id, email: req.user.email } : 'Not available');
     console.log('Editor Email:', editorEmail || 'Not provided (will use default)');
     console.log('Force Regenerate:', forceRegenerate || false);
     console.log('Custom Fields:', customFields ? `Array with ${customFields.length} fields` : 'None');
@@ -745,12 +743,7 @@ export const generateEventRegistrationForm = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('=== EVENT REGISTRATION FORM GENERATION ERROR ===');
-    console.error('Error type:', error.name);
-    console.error('Error message:', error.message);
-    console.error('Error stack:', error.stack);
-    console.error('Error code:', error.code);
-    console.error('Full error object:', JSON.stringify(error, null, 2));
+    console.error('Event registration form generation error:', error);
     
     // Provide specific error messages for different error types
     let errorMessage = 'Failed to generate event registration form';
@@ -765,15 +758,11 @@ export const generateEventRegistrationForm = async (req, res) => {
     } else if (error.isRetryableError && error.retryCount >= 3) {
       errorMessage = 'Form generation failed after multiple attempts. The service may be temporarily unavailable. Please try again in a few minutes.';
       errorCode = 503; // Service Unavailable
-    } else if (error.message) {
-      // Include the actual error message for debugging
-      errorMessage = `Failed to generate event registration form: ${error.message}`;
     }
     
     res.status(errorCode).json({
       success: false,
       message: errorMessage,
-      error: error.message,
       code: error.code,
       retryCount: error.retryCount,
       canRetry: error.isRetryableError && error.retryCount < 3
@@ -1313,93 +1302,6 @@ export const checkGoogleMeetConfig = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to check Google Meet configuration'
-    });
-  }
-};
-
-/**
- * Controller to generate event posters using AI
- * 
- * Expected Request Body:
- * {
- *   eventName: string (required) - Name of the event
- *   dateTime: string (required) - Event date and time
- *   location: string (required) - Event location
- *   eventType: string (required) - Type of event
- *   description?: string (optional) - Event description
- *   posterStyle?: string (optional) - Style preference for poster
- * }
- * 
- * Returns:
- * {
- *   success: boolean,
- *   posters: Array<{url: string, style: string}>
- * }
- */
-export const generateEventPosters = async (req, res) => {
-  try {
-    console.log('=== GENERATE EVENT POSTERS CONTROLLER CALLED ===');
-    console.log('Request body:', JSON.stringify(req.body, null, 2));
-
-    const {
-      eventName,
-      dateTime,
-      location,
-      eventType,
-      description,
-      posterStyle
-    } = req.body;
-
-    // Validate required fields
-    if (!eventName || !dateTime || !location || !eventType) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing required fields: eventName, dateTime, location, and eventType are required"
-      });
-    }
-
-    // Use SmythOS agent for poster generation
-    const smythosUrl = "https://cmfw5qbmfxvnkjxgtpjoabofw.agent.a.smyth.ai";
-    
-    console.log("SmythOS URL:", smythosUrl);
-    console.log("Full endpoint:", `${smythosUrl}/api/generate_event_posters`);
-    
-    // Prepare payload for SmythOS agent
-    const payload = {
-      eventName,
-      dateTime,
-      location,
-      eventType,
-      description: description || '',
-      posterStyle: posterStyle || 'modern'
-    };
-
-    console.log("Sending poster generation payload:", JSON.stringify(payload, null, 2));
-
-    const result = await axios.post(`${smythosUrl}/api/generate_event_posters`, payload, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 60000 // 60 seconds timeout for image generation
-    });
-
-    console.log("SmythOS Poster Response:", JSON.stringify(result.data, null, 2));
-    
-    // Return the response from SmythOS
-    return res.status(200).json({
-      success: true,
-      ...result.data
-    });
-
-  } catch (error) {
-    console.error("Event poster generation error:", error.message);
-    console.error("Error details:", error.response?.data || error);
-    
-    return res.status(500).json({
-      success: false,
-      error: "Failed to generate event posters. Please try again.",
-      details: error.message,
-      smythosResponse: error.response?.data
     });
   }
 };
